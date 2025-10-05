@@ -25,3 +25,19 @@ Content-Type: application/json
   "stock": -5,
   "estado": true
 }
+### Crear producto con stock bajo
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+  "nombre": "Laptop Lenovo ThinkPad",
+  "descripcion": "Notebook empresarial",
+  "categoria": "Laptops",
+  "precio": 3200,
+  "stock": 2,
+  "stockMinimo": 5,
+  "imagenUrl": "https://example.com/laptop.jpg",
+  "marca": "Lenovo",
+  "modelo": "ThinkPad X1",
+  "estado": true
+}

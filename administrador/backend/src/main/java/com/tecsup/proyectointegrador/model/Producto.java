@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+
 @Entity
 @Table(name = "productos")
 public class Producto {
@@ -28,7 +29,15 @@ public class Producto {
     @NotNull(message = "El stock no puede ser nulo")
     @Min(value = 0, message = "El stock debe ser mayor o igual a 0")
     private Integer stock;
+    @Min(value = 0, message = "El umbral de alerta debe ser mayor o igual a 0")
+    private Integer stockMinimo = 5; // valor por defecto
+    public Integer getStockMinimo() {
+        return stockMinimo;
+    }
 
+    public void setStockMinimo(Integer stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
     private String imagenUrl;
     private String marca;
     private String modelo;

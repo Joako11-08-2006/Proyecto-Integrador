@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "nombre": "iPhone 15 Pro",
+  "descripcion": "Smartphone de alta gama con chip A17 Pro",
+  "categoria": "Celulares",
+  "precio": 4899.99,
+  "stock": 10,
+  "imagenUrl": "https://example.com/iphone15.jpg",
+  "marca": "Apple",
+  "modelo": "15 Pro",
+  "estado": true
+}

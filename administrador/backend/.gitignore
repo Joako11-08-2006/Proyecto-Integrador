@@ -1,33 +1,67 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+##############################
+# 🧠 IntelliJ IDEA
+##############################
+.idea/
 *.iml
+out/
 *.ipr
+*.iws
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+##############################
+# ⚙️ Maven
+##############################
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+*.log
 
-### VS Code ###
+##############################
+# ☕ Java / Spring Boot
+##############################
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+##############################
+# 🧰 Sistema Operativo
+##############################
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+##############################
+# 📦 Entornos / IDEs
+##############################
 .vscode/
+*.swp
+*.swo
+
+##############################
+# 🔐 Credenciales (por seguridad)
+##############################
+application-local.properties
+application-dev.properties
+application-prod.properties
+.env
+
+##############################
+# 📊 Archivos temporales
+##############################
+*.tmp
+*.bak
+*.backup
+*.old
+
+##############################
+# 🚀 Otros
+##############################
+# Archivos de pruebas o builds temporales
+build/
+bin/
