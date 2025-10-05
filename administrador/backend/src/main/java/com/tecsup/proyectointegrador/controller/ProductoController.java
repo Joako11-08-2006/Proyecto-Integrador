@@ -1,51 +1,50 @@
 package com.tecsup.proyectointegrador.controller;
 
 import com.tecsup.proyectointegrador.model.Producto;
-import com.tecsup.proyectointegrador.repository.ProductoRepository;
+import com.tecsup.proyectointegrador.service.ProductoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*") // permite peticiones desde cualquier frontend
 public class ProductoController {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private ProductoService productoService;
 
+    // Listar productos
     @GetMapping
-    public List<Producto> listarProductos() {
-        return productoRepository.findAll();
+    public List<Producto> listar() {
+        return productoService.listarTodos();
     }
 
-    @PostMapping
-    public Producto crearProducto(@RequestBody Producto producto) {
-        return productoRepository.save(producto);
-    }
-
+    // Buscar por ID
     @GetMapping("/{id}")
-    public Producto obtenerProducto(@PathVariable Long id) {
-        return productoRepository.findById(id).orElse(null);
+    public Optional<Producto> obtenerPorId(@PathVariable Long id) {
+        return productoService.buscarPorId(id);
     }
 
+    // Crear nuevo producto con validación
+    @PostMapping
+    public Producto crear(@Valid @RequestBody Producto producto) {
+        return productoService.guardar(producto);
+    }
+
+    // Actualizar producto existente
     @PutMapping("/{id}")
-    public Producto actualizarProducto(@PathVariable Long id, @RequestBody Producto productoActualizado) {
-        Producto producto = productoRepository.findById(id).orElse(null);
-        if (producto != null) {
-            producto.setNombre(productoActualizado.getNombre());
-            producto.setDescripcion(productoActualizado.getDescripcion());
-            producto.setPrecio(productoActualizado.getPrecio());
-            producto.setStock(productoActualizado.getStock());
-            producto.setCategoria(productoActualizado.getCategoria());
-            return productoRepository.save(producto);
-        }
-        return null;
+    public Producto actualizar(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+        return productoService.actualizar(id, producto);
     }
 
+    // Eliminar producto
     @DeleteMapping("/{id}")
-    public void eliminarProducto(@PathVariable Long id) {
-        productoRepository.deleteById(id);
+    public String eliminar(@PathVariable Long id) {
+        productoService.eliminar(id);
+        return "Producto eliminado con ID: " + id;
     }
 }

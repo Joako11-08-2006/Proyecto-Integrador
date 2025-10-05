@@ -1,0 +1,27 @@
+### Crear un nuevo producto
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+  "nombre": "iPhone 15 Pro",
+  "descripcion": "Smartphone de alta gama con chip A17 Pro",
+  "categoria": "Celulares",
+  "precio": 4899.99,
+  "stock": 10,
+  "imagenUrl": "https://example.com/iphone15.jpg",
+  "marca": "Apple",
+  "modelo": "15 Pro",
+  "estado": true
+}
+
+### Intento con error (precio negativo)
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+  "nombre": "Producto Erróneo",
+  "categoria": "Prueba",
+  "precio": -100,
+  "stock": -5,
+  "estado": true
+}
