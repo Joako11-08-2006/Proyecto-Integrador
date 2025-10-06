@@ -5,31 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46893f1f-beb6-437c-b9a8-79fd270e70f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_api_0_11_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_impl_0_11_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_jackson_0_11_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_security_3_5_6.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_config_6_5_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_core_6_5_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_crypto_6_5_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_web_6_5_5.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/RoleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/UserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/service/ UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/RegisterRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtAuthEntryPoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/service/CustomUserDetailsService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Producto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/service/ UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/LoginRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -107,7 +101,7 @@
       <updated>1759696513587</updated>
       <workItem from="1759696515002" duration="6107000" />
       <workItem from="1759717986643" duration="9098000" />
-      <workItem from="1759758045932" duration="67000" />
+      <workItem from="1759758045932" duration="4443000" />
     </task>
     <servers />
   </component>

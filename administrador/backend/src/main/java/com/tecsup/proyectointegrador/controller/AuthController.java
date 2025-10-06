@@ -3,10 +3,18 @@ package com.tecsup.proyectointegrador.controller;
 import com.tecsup.proyectointegrador.model.User;
 import com.tecsup.proyectointegrador.repository.UserRepository;
 import com.tecsup.proyectointegrador.security.jwt.JwtUtil;
+import com.tecsup.proyectointegrador.security.model.LoginRequest;
+import com.tecsup.proyectointegrador.security.model.RegisterRequest;
+import com.tecsup.proyectointegrador.security.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,36 +22,50 @@ import java.util.*;
 public class AuthController {
 
     @Autowired
-    private UserRepository userRepository;
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private UserRepository userRepository;
 
-    // Registro
-    @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    // 🔐 LOGIN
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String jwt = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(jwt);
     }
 
-    // Login
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody User user) {
-        User foundUser = userRepository.findByUsername(user.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        if (!passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
-            throw new RuntimeException("Contraseña incorrecta");
+    // 🧾 REGISTRO
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            return ResponseEntity.badRequest().body("El usuario ya existe");
         }
 
-        String token = jwtUtil.generateToken(foundUser.getUsername());
+        User newUser = new User();
+        newUser.setUsername(registerRequest.getUsername());
+        newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        response.put("username", foundUser.getUsername());
-        return response;
+        userRepository.save(newUser);
+
+        return ResponseEntity.ok("Usuario registrado exitosamente");
     }
 }

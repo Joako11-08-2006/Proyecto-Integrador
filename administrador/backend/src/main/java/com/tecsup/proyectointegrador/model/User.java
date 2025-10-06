@@ -2,6 +2,7 @@ package com.tecsup.proyectointegrador.model;
 
 import jakarta.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,6 +32,13 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public <T> User(String username, String password, List<T> emptyList) {
+    }
+
+    public static org.springframework.security.core.userdetails.User.UserBuilder withUsername(String username) {
+        return null;
     }
 
     // Getters y setters
