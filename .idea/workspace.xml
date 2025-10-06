@@ -5,15 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46893f1f-beb6-437c-b9a8-79fd270e70f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Dashboard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Inventario.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Navbar.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/ProductoForm.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/services/productoService.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_api_0_11_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_impl_0_11_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_jackson_0_11_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_security_3_5_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_config_6_5_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_core_6_5_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_crypto_6_5_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_web_6_5_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/RoleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/service/ UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/ProductoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/ProductoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/frontend/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Comprobantes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Producto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,23 +50,28 @@
     </option>
   </component>
   <component name="ProjectId" id="33f7wnunJ68dTN5gCyORWOaQqNC" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm",
-    "spring.configuration.checksum": "991f668b994ecc702ec7f84be13554af"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;991f668b994ecc702ec7f84be13554af&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Spring Boot.ProyectoIntegradorApplication">
     <configuration name="api-test | Crear producto con stock bajo" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/administrador/backend/api-test.http" index="3" requestIdentifier="Crear producto con stock bajo" runType="Run single request">
       <method v="2" />
@@ -90,7 +106,8 @@
       <option name="presentableId" value="Default" />
       <updated>1759696513587</updated>
       <workItem from="1759696515002" duration="6107000" />
-      <workItem from="1759717986643" duration="3516000" />
+      <workItem from="1759717986643" duration="9098000" />
+      <workItem from="1759758045932" duration="67000" />
     </task>
     <servers />
   </component>
@@ -107,5 +124,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

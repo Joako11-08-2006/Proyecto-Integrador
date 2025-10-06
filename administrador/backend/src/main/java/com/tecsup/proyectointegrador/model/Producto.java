@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 
+
 @Entity
 @Table(name = "productos")
 public class Producto {
