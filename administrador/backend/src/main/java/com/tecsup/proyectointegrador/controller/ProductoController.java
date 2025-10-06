@@ -4,6 +4,8 @@ import com.tecsup.proyectointegrador.model.Producto;
 import com.tecsup.proyectointegrador.service.ProductoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "*") // permite peticiones desde cualquier frontend
+@CrossOrigin(origins = "http://localhost:3000") // permite peticiones desde el frontend React
 public class ProductoController {
 
     @Autowired
@@ -19,32 +21,45 @@ public class ProductoController {
 
     // Listar productos
     @GetMapping
-    public List<Producto> listar() {
-        return productoService.listarTodos();
+    public ResponseEntity<List<Producto>> listar() {
+        List<Producto> productos = productoService.listarTodos();
+        return ResponseEntity.ok(productos);
     }
 
     // Buscar por ID
     @GetMapping("/{id}")
-    public Optional<Producto> obtenerPorId(@PathVariable Long id) {
-        return productoService.buscarPorId(id);
+    public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id) {
+        Optional<Producto> producto = productoService.buscarPorId(id);
+        return producto.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Crear nuevo producto con validación
     @PostMapping
-    public Producto crear(@Valid @RequestBody Producto producto) {
-        return productoService.guardar(producto);
+    public ResponseEntity<Producto> crear(@Valid @RequestBody Producto producto) {
+        Producto nuevoProducto = productoService.guardar(producto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
     }
 
     // Actualizar producto existente
     @PutMapping("/{id}")
-    public Producto actualizar(@PathVariable Long id, @Valid @RequestBody Producto producto) {
-        return productoService.actualizar(id, producto);
+    public ResponseEntity<Producto> actualizar(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+        try {
+            Producto productoActualizado = productoService.actualizar(id, producto);
+            return ResponseEntity.ok(productoActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Eliminar producto
     @DeleteMapping("/{id}")
-    public String eliminar(@PathVariable Long id) {
-        productoService.eliminar(id);
-        return "Producto eliminado con ID: " + id;
+    public ResponseEntity<String> eliminar(@PathVariable Long id) {
+        try {
+            productoService.eliminar(id);
+            return ResponseEntity.ok("Producto eliminado con ID: " + id);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

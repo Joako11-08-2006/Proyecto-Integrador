@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46893f1f-beb6-437c-b9a8-79fd270e70f6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/administrador/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Producto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/service/ProductoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/service/ProductoService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Dashboard.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Inventario.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Navbar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/ProductoForm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/services/productoService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/ProductoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/ProductoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/frontend/.gitkeep" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Comprobantes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/frontend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +52,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm"
+    "nodejs_package_manager_path": "npm",
+    "spring.configuration.checksum": "991f668b994ecc702ec7f84be13554af"
   }
 }]]></component>
   <component name="RunManager" selected="Spring Boot.ProyectoIntegradorApplication">
@@ -82,7 +89,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759696513587</updated>
-      <workItem from="1759696515002" duration="4339000" />
+      <workItem from="1759696515002" duration="6107000" />
+      <workItem from="1759717986643" duration="3516000" />
     </task>
     <servers />
   </component>
