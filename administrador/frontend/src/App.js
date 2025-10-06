@@ -8,7 +8,7 @@ import Inventario from "./components/Inventario";
 import Comprobantes from "./components/Comprobantes";
 import Usuarios from "./components/Usuarios";
 import Login from "./components/Login";
-
+import Pagos from "./components/Pagos";
 function App() {
     return (
         <Router>
@@ -20,6 +20,7 @@ function App() {
                     <Route path="/inventario" element={<Inventario />} />{/* 📦 Inventario */}
                     <Route path="/comprobantes" element={<Comprobantes />} />{/* 📜 Comprobantes */}
                     <Route path="/usuarios" element={<Usuarios />} />    {/* 👥 Gestión de usuarios */}
+                    <Route path="/pagos" element={<Pagos />} />
                 </Routes>
             </div>
         </Router>

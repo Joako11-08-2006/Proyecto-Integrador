@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46893f1f-beb6-437c-b9a8-79fd270e70f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Login.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Usuarios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Proyecto-Integrador.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Proyecto-Integrador.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/PagoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Pagos.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/model/LoginRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/model/RegisterRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/RoleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/service/CustomUserDetailsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/administrador/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/administrador/frontend/src/components/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Navbar.js" afterDir="false" />
     </list>
@@ -129,7 +118,7 @@
       <updated>1759696513587</updated>
       <workItem from="1759696515002" duration="6107000" />
       <workItem from="1759717986643" duration="9098000" />
-      <workItem from="1759758045932" duration="14079000" />
+      <workItem from="1759758045932" duration="15687000" />
     </task>
     <servers />
   </component>

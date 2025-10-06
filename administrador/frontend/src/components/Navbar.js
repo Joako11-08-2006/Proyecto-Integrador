@@ -59,6 +59,9 @@ function Navbar() {
                                 <i className="bi bi-file-earmark-text me-1"></i> Comprobantes
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/pagos">Pagos</Link>
+                        </li>
                     </ul>
 
                     <Link className="btn btn-outline-light d-flex align-items-center" to="#">
