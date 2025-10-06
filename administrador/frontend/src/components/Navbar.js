@@ -13,6 +13,8 @@ function Navbar() {
                     <i className="bi bi-shop me-2 text-primary fs-4"></i>
                     <span className="fw-bold">TecnoMarket</span>
                 </Link>
+                <Link className="nav-link" to="/usuarios">Usuarios</Link>
+
 
                 <button
                     className="navbar-toggler"

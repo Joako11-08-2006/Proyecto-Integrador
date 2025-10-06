@@ -5,17 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="46893f1f-beb6-437c-b9a8-79fd270e70f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/RegisterRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtAuthEntryPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/service/CustomUserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Login.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Usuarios.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Proyecto-Integrador.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Proyecto-Integrador.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/model/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/RegisterRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/model/RegisterRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/model/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/RoleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/repository/RoleRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/jwt/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/service/ UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/controller/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/backend/src/main/java/com/tecsup/proyectointegrador/security/service/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/frontend/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/administrador/frontend/src/components/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/administrador/frontend/src/components/Navbar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +29,13 @@
   </component>
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -67,6 +79,20 @@
   }
 }</component>
   <component name="RunManager" selected="Spring Boot.ProyectoIntegradorApplication">
+    <configuration name="HashGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="HashGenerator" />
+      <module name="Proyecto-integrador" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestPassword" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="TestPassword" />
+      <module name="Proyecto-integrador" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="api-test | Crear producto con stock bajo" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/administrador/backend/api-test.http" index="3" requestIdentifier="Crear producto con stock bajo" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -85,6 +111,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.TestPassword" />
+        <item itemvalue="Application.HashGenerator" />
         <item itemvalue="HTTP Request.api-test | Crear producto con stock bajo" />
         <item itemvalue="HTTP Request.api-test | Intento con error (precio negativo)" />
         <item itemvalue="HTTP Request.api-test | Crear un nuevo producto" />
@@ -101,7 +129,7 @@
       <updated>1759696513587</updated>
       <workItem from="1759696515002" duration="6107000" />
       <workItem from="1759717986643" duration="9098000" />
-      <workItem from="1759758045932" duration="4443000" />
+      <workItem from="1759758045932" duration="14079000" />
     </task>
     <servers />
   </component>

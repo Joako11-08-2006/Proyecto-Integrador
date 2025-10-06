@@ -3,18 +3,20 @@ package com.tecsup.proyectointegrador.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "mi_clave_secreta_super_segura";
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
+            "mi_clave_super_secreta_12345678901234567890123456789012".getBytes()
+    );
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -40,10 +42,14 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    // ✅ Aquí está la corrección
+
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10h
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
