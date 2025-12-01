@@ -6,7 +6,10 @@ class EsAdmin(BasePermission):
     """
     def has_permission(self, request, view):
         user = request.user
-        return hasattr(user, "cliente") and user.cliente.rol in ["Admin", "SuperAdmin"]
+        if user.is_superuser:
+            return True
+        cliente = getattr(user, "cliente", None)
+        return cliente and cliente.rol in ["Admin", "SuperAdmin"]
 
 
 class EsSuperAdmin(BasePermission):
@@ -15,4 +18,7 @@ class EsSuperAdmin(BasePermission):
     """
     def has_permission(self, request, view):
         user = request.user
-        return hasattr(user, "cliente") and user.cliente.rol == "SuperAdmin"
+        if user.is_superuser:
+            return True
+        cliente = getattr(user, "cliente", None)
+        return cliente and cliente.rol == "SuperAdmin"

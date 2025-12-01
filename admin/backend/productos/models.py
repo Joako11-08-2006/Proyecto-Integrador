@@ -24,9 +24,15 @@ class Producto(models.Model):
         super().save(*args, **kwargs)
 
         from .models import Alerta
+        # Solo crear alerta si no hay una pendiente y el stock está bajo
         if self.stock <= STOCK_MINIMO:
-            mensaje = f"El stock del producto '{self.nombre}' es bajo ({self.stock})."
-            Alerta.objects.create(producto=self, mensaje=mensaje)
+            existe_alerta = Alerta.objects.filter(producto=self, visto=False).exists()
+            if not existe_alerta:
+                mensaje = f"El stock del producto '{self.nombre}' es bajo ({self.stock})."
+                Alerta.objects.create(producto=self, mensaje=mensaje)
+        else:
+            # Si el stock se recupera, marcamos como vistas las alertas pendientes
+            Alerta.objects.filter(producto=self, visto=False).update(visto=True)
 
     def __str__(self):
         return self.nombre
@@ -40,3 +46,17 @@ class Alerta(models.Model):
 
     def __str__(self):
         return f"Alerta: {self.producto.nombre}"
+
+
+class Promocion(models.Model):
+    nombre = models.CharField(max_length=200)
+    descripcion = models.TextField(blank=True)
+    descuento = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
+    activo = models.BooleanField(default=True)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_fin = models.DateField(null=True, blank=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.nombre

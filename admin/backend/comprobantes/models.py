@@ -7,11 +7,16 @@ class Comprobante(models.Model):
         ('BOLETA', 'Boleta'),
         ('FACTURA', 'Factura'),
     )
+    ESTADO_CHOICES = (
+        ('PENDIENTE', 'Pendiente'),
+        ('PAGADO', 'Pagado'),
+    )
 
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True)
     fecha = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    estado = models.CharField(max_length=10, choices=ESTADO_CHOICES, default='PENDIENTE')
 
     def __str__(self):
         cliente_nombre = self.cliente.nombre if self.cliente else "Sin cliente"

@@ -3,8 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from clientes.permissions import EsAdmin
-from .models import Producto, Categoria, Alerta
-from .serializers import ProductoSerializer, CategoriaSerializer, AlertaSerializer
+from .models import Producto, Categoria, Alerta, Promocion
+from .serializers import ProductoSerializer, CategoriaSerializer, AlertaSerializer, PromocionSerializer
 
 
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -25,6 +25,12 @@ class AlertaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, EsAdmin]
 
 
+class PromocionViewSet(viewsets.ModelViewSet):
+    queryset = Promocion.objects.all().order_by('-creado_en')
+    serializer_class = PromocionSerializer
+    permission_classes = [IsAuthenticated, EsAdmin]
+
+
 # --------- Endpoints HU-03 ---------
 
 class AlertListAPIView(generics.ListAPIView):
@@ -32,7 +38,27 @@ class AlertListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, EsAdmin]
 
     def get_queryset(self):
-        return Alerta.objects.filter(visto=False).order_by('-creado_en')
+        from .models import STOCK_MINIMO
+
+        # Crea alertas faltantes para productos en stock bajo
+        low_stock = Producto.objects.filter(stock__lte=STOCK_MINIMO)
+        for prod in low_stock:
+            existe = Alerta.objects.filter(producto=prod, visto=False).exists()
+            if not existe:
+                mensaje = f"El stock del producto '{prod.nombre}' es bajo ({prod.stock})."
+                Alerta.objects.create(producto=prod, mensaje=mensaje, visto=False)
+
+        # Limpia alertas cuyo producto ya no está en stock bajo
+        Alerta.objects.filter(
+            visto=False,
+            producto__stock__gt=STOCK_MINIMO
+        ).update(visto=True)
+
+        return (
+            Alerta.objects
+            .filter(visto=False, producto__stock__lte=STOCK_MINIMO)
+            .order_by('-creado_en')
+        )
 
 
 class AlertMarkSeenAPIView(generics.UpdateAPIView):

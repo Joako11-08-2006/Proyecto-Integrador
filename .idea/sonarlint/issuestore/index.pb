@@ -1,13 +1,29 @@
 
-P
- cliente/backend/cliente/mvnw.cmd,9\d\9d4efcedf610c7573603865eba0c3dff0e9708f4
-O
-cliente/backend/cliente/pom.xml,a\f\af8a7df9575ff9e06b44baa1919f4ad6fbde0dd7
-O
-admin/backend/admin_api/wsgi.py,9\d\9d032d5ee4bd0877281efa82bf991ea2754d0853
-O
-admin/backend/admin_api/urls.py,1\b\1b338157c9397433b8a7ecd714333d5a384af430
-P
- admin/backend/productos/views.py,2\6\2698742838324e5be25a5c18ac1782384861ff1f
-{
-Kcliente/backend/cliente/src/main/java/com/ecommerce/ClienteApplication.java,4\9\49b27db3ee78691bcaf38149c3f0b53d1ee73ca4
+J
+cliente/backend/.gitignore,5\4\542e0709fa871e256db039f0968e46a59f8d727d
+D
+cliente/backend/mvnw,8\b\8b2c99a9256de4d15a7cb2a54a1d60312f7ba3e4
+e
+5cliente/backend/.mvn/wrapper/maven-wrapper.properties,c\1\c150f73a6546467c11bbe6dae5e13193b22d74cc
+N
+cliente/backend/.gitattributes,b\1\b1c44761bb5fb5715dde501ee452fbac327f1a3a
+s
+Ccliente/backend/src/main/java/com/ecommerce/ClienteApplication.java,f\5\f5d277317b5c5e789a26d7f5d68b2907889b0470
+H
+cliente/backend/mvnw.cmd,e\2\e24ce4b52cdcef61673f4681a991537924567b8c
+G
+cliente/backend/pom.xml,5\4\5472786238c64790dbd4c54a1c3cbd3e5fa6059e
+S
+#admin/backend/admin_api/settings.py,c\3\c3820463452741740514ecb61092688cfb6b713b
+y
+Icliente/backend/src/main/java/com/ecommerce/auth/service/AuthService.java,d\d\dd0734935e4462eb19a51197b42450944d0d3035
+ƒ
+Scliente/backend/src/main/java/com/ecommerce/auth/repository/AuthUserRepository.java,a\5\a54d0e58167d3922e7bdc763b891303d0a066ea5
+u
+Ecliente/backend/src/main/java/com/ecommerce/auth/entity/AuthUser.java,c\9\c9c5fea377be411741770f41874103b645a17e88
+v
+Fcliente/backend/src/main/java/com/ecommerce/auth/dto/LoginRequest.java,4\5\4598c106b009dc943ca499897f2d22178d1ebdcf
+
+Ocliente/backend/src/main/java/com/ecommerce/auth/controller/AuthController.java,7\1\71d9728c686060eaba89645be1fefb28049c99f3
+x
+Hcliente/backend/src/main/java/com/ecommerce/security/SecurityConfig.java,2\3\233ac94478ddaf02f61a5092d9412c110c3aa0eb

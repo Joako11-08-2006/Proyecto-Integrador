@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/cliente/backend/Cliente.iml" filepath="$PROJECT_DIR$/cliente/backend/Cliente.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ProyectoIntegrador.iml" filepath="$PROJECT_DIR$/.idea/ProyectoIntegrador.iml" />
     </modules>
   </component>
