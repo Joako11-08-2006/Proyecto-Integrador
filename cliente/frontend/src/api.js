@@ -329,6 +329,14 @@ export const api = {
         });
         return handleResponse(res);
     },
+    chatStatus: async () => {
+        const res = await fetch(`${API_BASE}/api/chat/status`);
+        return handleResponse(res);
+    },
+    chatHealth: async () => {
+        const res = await fetch(`${API_BASE}/api/chat/health`);
+        return handleResponse(res);
+    },
     chatKnowledge: async () => {
         const res = await fetch(`${API_BASE}/api/chat/knowledge`, {
             headers: { ...authHeader(currentCredentials) },

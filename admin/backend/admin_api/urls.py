@@ -1,5 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import re_path
+from django.views.static import serve
 from rest_framework.routers import DefaultRouter
 
 from productos.views import (
@@ -11,7 +15,6 @@ from productos.views import (
     PromocionViewSet,
 )
 from clientes.views import ClienteViewSet, PerfilView
-from comprobantes.views import ComprobanteViewSet
 from ventas.views import (
     VentaViewSet,
     VentaStatsAPIView,
@@ -30,7 +33,6 @@ router.register(r'categorias', CategoriaViewSet)
 router.register(r'alertas', AlertaViewSet, basename='alerta')
 router.register(r'promociones', PromocionViewSet)
 router.register(r'clientes', ClienteViewSet)
-router.register(r'comprobantes', ComprobanteViewSet)
 router.register(r'ventas', VentaViewSet)
 
 urlpatterns = [
@@ -52,4 +54,11 @@ urlpatterns = [
     # API REST principal
     path('api/', include(router.urls)),
     path('api/me/', PerfilView.as_view(), name='perfil'),
+]
+
+# Servir archivos de media (imágenes de productos) siempre
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Fallback explícito (en caso de que static devuelva lista vacía)
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

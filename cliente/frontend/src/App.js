@@ -14,29 +14,40 @@ import ChatWidget from "./components/ChatWidget";
 
 import { AuthProvider } from "./context/AuthContext";
 import { ShopProvider } from "./context/ShopContext";
+import { useLocation } from "react-router-dom";
+
+function AppRoutes() {
+    const location = useLocation();
+    const hiddenRoutes = ["/", "/register"];
+    const showChat = !hiddenRoutes.includes(location.pathname);
+
+    return (
+        <>
+            {showChat && <ChatWidget />}
+            <Routes>
+                {/* Auth */}
+                <Route path="/" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
+                {/* Cliente */}
+                <Route path="/home" element={<Home />} />
+                <Route path="/comparar" element={<Comparar />} />
+                <Route path="/carrito" element={<CartPage />} />
+                <Route path="/perfil" element={<Perfil />} />
+                <Route path="/admin-orders" element={<AdminOrders />} />
+                <Route path="/admin-stats" element={<AdminStats />} />
+            </Routes>
+        </>
+    );
+}
 
 function App() {
     return (
         <AuthProvider>
             <ShopProvider>
-                    <BrowserRouter>
-                        <ChatWidget />
-                        <Routes>
-
-                            {/* Auth */}
-                            <Route path="/" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-
-                            {/* Cliente */}
-                            <Route path="/home" element={<Home />} />
-                            <Route path="/comparar" element={<Comparar />} />
-                            <Route path="/carrito" element={<CartPage />} />
-                            <Route path="/perfil" element={<Perfil />} />
-                            <Route path="/admin-orders" element={<AdminOrders />} />
-                            <Route path="/admin-stats" element={<AdminStats />} />
-
-                        </Routes>
-                    </BrowserRouter>
+                <BrowserRouter>
+                    <AppRoutes />
+                </BrowserRouter>
             </ShopProvider>
         </AuthProvider>
     );

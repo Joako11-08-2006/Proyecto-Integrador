@@ -12,7 +12,6 @@ import Navbar from "./layout/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Inventory from "./pages/Inventory";
 import Users from "./pages/Users";
-import Comprobantes from "./pages/Comprobantes";
 import { getStoredAuth, logout as apiLogout } from "./api";
 
 function App() {
@@ -71,16 +70,6 @@ function App() {
               element={
                 rol === "Admin" || rol === "SuperAdmin"
                   ? <Inventory />
-                  : <Navigate to="/unauthorized" replace />
-              }
-            />
-
-            {/* Comprobantes: Admin y SuperAdmin */}
-            <Route
-              path="/comprobantes"
-              element={
-                rol === "Admin" || rol === "SuperAdmin"
-                  ? <Comprobantes />
                   : <Navigate to="/unauthorized" replace />
               }
             />

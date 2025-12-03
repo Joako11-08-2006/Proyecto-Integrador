@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PaperAirplaneIcon, ChatBubbleLeftRightIcon, XMarkIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PaperAirplaneIcon, ChatBubbleLeftRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { api } from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -17,21 +17,8 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState(initialMsgs);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [kbTitle, setKbTitle] = useState("");
-  const [kbContent, setKbContent] = useState("");
-  const [kbSaving, setKbSaving] = useState(false);
-
-  useEffect(() => {
-    if (isAdmin) {
-      api.chatKnowledge().then((k) => {
-        if (k) {
-          setKbTitle(k.title || "");
-          setKbContent(k.content || "");
-        }
-      }).catch(() => {});
-    }
-  }, [isAdmin]);
+  const [botError, setBotError] = useState(null);
+  const [health, setHealth] = useState(null);
 
   const sendMessage = async (text) => {
     if (!text.trim()) return;
@@ -39,12 +26,14 @@ export default function ChatWidget() {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
+      setBotError(null);
     try {
       const data = await api.chatAsk(text);
       const botText = data.text || "Estoy aquí para ayudarte.";
       const suggestions = data.suggestions || [];
       setMessages((prev) => [...prev, { from: "bot", text: botText, suggestions }]);
     } catch (e) {
+      setBotError("No pude responder ahora. Intenta nuevamente.");
       setMessages((prev) => [...prev, { from: "bot", text: "No pude responder ahora. Intenta de nuevo." }]);
     } finally {
       setLoading(false);
@@ -56,20 +45,23 @@ export default function ChatWidget() {
     sendMessage(q);
   };
 
-  const saveKnowledge = async () => {
-    if (!kbTitle.trim() || !kbContent.trim()) return;
-    setKbSaving(true);
-    try {
-      const saved = await api.chatKnowledgeSave({ title: kbTitle, content: kbContent });
-      setKbTitle(saved.title || kbTitle);
-      setKbContent(saved.content || kbContent);
-      setEditing(false);
-    } catch (e) {
-      // Silencioso para no romper el chat
-    } finally {
-      setKbSaving(false);
+  useEffect(() => {
+    if (open) {
+      (async () => {
+        try {
+          const h = await api.chatHealth();
+          setHealth(h);
+          if (h && h.ok) {
+            setMessages((prev) => [...prev, { from: "bot", text: "IA lista" }]);
+          } else {
+            setMessages((prev) => [...prev, { from: "bot", text: "IA no disponible" }]);
+          }
+        } catch (_) {
+          setHealth({ ok: false });
+        }
+      })();
     }
-  };
+  }, [open]);
 
   if (!open) {
     return (
@@ -86,57 +78,13 @@ export default function ChatWidget() {
     <div className="fixed bottom-6 right-6 w-80 md:w-96 bg-white shadow-2xl rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
       <div className="bg-blue-600 text-white p-4 flex items-center justify-between">
         <div>
-          <p className="font-semibold flex items-center gap-2">
-            Asistente Virtual
-            {isAdmin && (
-              <button
-                className="text-xs bg-white/20 px-2 py-1 rounded-lg hover:bg-white/30"
-                onClick={() => setEditing((v) => !v)}
-              >
-                <PencilSquareIcon className="w-4 h-4 inline-block mr-1" />
-                Editar bot
-              </button>
-            )}
-          </p>
-          <p className="text-xs text-blue-100">En línea</p>
+          <p className="font-semibold flex items-center gap-2">Asistente Virtual</p>
+          <p className="text-xs text-blue-100">{health && health.ok ? "En línea" : "Sin IA"}</p>
         </div>
         <button onClick={() => setOpen(false)}>
           <XMarkIcon className="w-5 h-5" />
         </button>
       </div>
-
-      {editing && (
-        <div className="border-b border-gray-200 p-3 space-y-2 text-sm">
-          <input
-            value={kbTitle}
-            onChange={(e) => setKbTitle(e.target.value)}
-            placeholder="Título del conocimiento"
-            className="w-full border rounded-lg px-3 py-2"
-          />
-          <textarea
-            value={kbContent}
-            onChange={(e) => setKbContent(e.target.value)}
-            placeholder="Contexto que el bot debe saber (en español)"
-            rows={5}
-            className="w-full border rounded-lg px-3 py-2"
-          />
-          <div className="flex justify-end gap-2">
-            <button
-              onClick={() => setEditing(false)}
-              className="text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={saveKnowledge}
-              disabled={kbSaving}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-60"
-            >
-              {kbSaving ? "Guardando..." : "Guardar"}
-            </button>
-          </div>
-        </div>
-      )}
 
       <div className="flex-1 p-3 space-y-2 overflow-y-auto" style={{ maxHeight: "360px" }}>
         {messages.map((m, idx) => (
@@ -164,6 +112,7 @@ export default function ChatWidget() {
           </div>
         ))}
         {loading && <p className="text-xs text-gray-400">Escribiendo...</p>}
+        {botError && <p className="text-xs text-red-500">{botError}</p>}
       </div>
 
       <div className="border-t p-3">

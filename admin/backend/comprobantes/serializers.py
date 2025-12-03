@@ -1,54 +1,67 @@
 from rest_framework import serializers
-from .models import Comprobante, ComprobanteItem
 from productos.models import Producto
+from .models import Comprobante, ComprobanteItem
 
-class ComprobanteItemSerializer(serializers.ModelSerializer):
-    producto_nombre = serializers.CharField(source='producto.nombre', read_only=True)
+
+class ComprobanteItemReadSerializer(serializers.ModelSerializer):
+    producto_nombre = serializers.CharField(source="producto.nombre", read_only=True)
+    producto_marca = serializers.CharField(source="producto.categoria_nombre", read_only=True)
     subtotal = serializers.SerializerMethodField()
 
     class Meta:
         model = ComprobanteItem
         fields = [
-            'id',
-            'producto',
-            'producto_nombre',
-            'cantidad',
-            'precio_unitario',
-            'subtotal',
+            "id",
+            "producto",
+            "producto_nombre",
+            "producto_marca",
+            "cantidad",
+            "precio_unitario",
+            "subtotal",
         ]
 
     def get_subtotal(self, obj):
         return obj.cantidad * obj.precio_unitario
 
 
-class ComprobanteSerializer(serializers.ModelSerializer):
-    # items enviados desde el frontend
-    items = ComprobanteItemSerializer(many=True, write_only=True)
-    # items devueltos en la respuesta
-    detalle = ComprobanteItemSerializer(source='items', many=True, read_only=True)
+class ComprobanteCreateSerializer(serializers.ModelSerializer):
+    # items enviados desde el frontend: [{producto_id, cantidad}]
+    items = serializers.ListField(child=serializers.DictField(), write_only=True)
 
     class Meta:
         model = Comprobante
-        fields = ['id', 'tipo', 'cliente', 'fecha', 'total', 'items', 'detalle']
-        read_only_fields = ['fecha', 'total']
+        fields = ["id", "tipo", "cliente", "estado", "items"]
+        extra_kwargs = {"cliente": {"required": False, "allow_null": True}}
 
     def create(self, validated_data):
-        items_data = validated_data.pop('items', [])
-        # calcular total
+        items_data = validated_data.pop("items", [])
+        validated_data.pop("cliente", None)  # cliente opcional, ignoramos si no llega
+        comp = Comprobante.objects.create(total=0, **validated_data)
         total = 0
-        for item in items_data:
-            total += item['cantidad'] * item['precio_unitario']
-
-        comprobante = Comprobante.objects.create(total=total, **validated_data)
 
         for item in items_data:
-            producto = item.get('producto')
-            # opcional: podrías validar stock aquí
+            producto = Producto.objects.get(id=item["producto_id"])
+            cantidad = int(item.get("cantidad", 1))
+            precio = producto.precio
+
             ComprobanteItem.objects.create(
-                comprobante=comprobante,
+                comprobante=comp,
                 producto=producto,
-                cantidad=item['cantidad'],
-                precio_unitario=item['precio_unitario'],
+                cantidad=cantidad,
+                precio_unitario=precio,
             )
+            total += precio * cantidad
 
-        return comprobante
+        comp.total = total
+        comp.save(update_fields=["total"])
+        return comp
+
+
+class ComprobanteDetailSerializer(serializers.ModelSerializer):
+    cliente_nombre = serializers.CharField(source="cliente.nombre", read_only=True)
+    items = ComprobanteItemReadSerializer(source="items", many=True, read_only=True)
+
+    class Meta:
+        model = Comprobante
+        fields = ["id", "tipo", "cliente", "cliente_nombre", "fecha", "estado", "total", "items"]
+        read_only_fields = ["fecha", "total"]

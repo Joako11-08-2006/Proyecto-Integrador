@@ -190,19 +190,20 @@ public class OrderService {
         }
 
         try {
-            Path uploadsDir = Paths.get("uploads", "vouchers");
+            Path uploadsDir = Paths.get(System.getProperty("user.dir"), "uploads", "vouchers");
             Files.createDirectories(uploadsDir);
             String ext = obtenerExtension(voucher.getOriginalFilename());
             String filename = UUID.randomUUID() + (ext != null ? "." + ext : "");
             Path target = uploadsDir.resolve(filename);
             voucher.transferTo(target.toFile());
 
-            order.setVoucherUrl("/" + target.toString().replace("\\", "/"));
+            String publicUrl = "/uploads/vouchers/" + filename;
+            order.setVoucherUrl(publicUrl);
             order.setOperationCode(operationCode);
             order.setPaymentStatus("EN_REVISION");
             orderRepository.save(order);
 
-            return new VoucherUploadResponse("Voucher recibido, en revisión", order.getVoucherUrl(), order.getOperationCode());
+            return new VoucherUploadResponse("Voucher recibido, en revision", order.getVoucherUrl(), order.getOperationCode());
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo guardar el voucher");
         }

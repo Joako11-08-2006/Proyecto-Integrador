@@ -1,6 +1,6 @@
 // src/components/SalesReport.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import { ventasStats } from "../api";
+import { ventasStats, productos } from "../api";
 import {
   BarChart,
   Bar,
@@ -36,11 +36,13 @@ const formatSoles = (n) => `S/ ${Number(n || 0).toLocaleString("es-PE")}`;
 export default function SalesReport() {
   const [period, setPeriod] = useState("dia");
   const [stats, setStats] = useState(null);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     ventasStats()
       .then((res) => setStats(res || {}))
       .catch(() => setStats({}));
+    productos().then((res) => setProducts(res || [])).catch(() => {});
   }, []);
 
   const dataByPeriod = useMemo(() => {

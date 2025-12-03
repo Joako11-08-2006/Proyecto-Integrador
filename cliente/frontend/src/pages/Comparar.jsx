@@ -30,23 +30,24 @@ export default function Comparar() {
   const list = products.filter((p) => seleccionados.includes(p.id)).slice(0, 3);
 
   const getSpec = (p, spec) => {
+    const s = p.specs || {};
     switch (spec) {
       case "Pantalla":
-        return p.descripcion || "-";
+        return s.pantalla || p.descripcion || "-";
       case "Procesador":
-        return "-";
+        return s.procesador || "-";
       case "RAM":
-        return "-";
+        return s.ram || "-";
       case "Almacenamiento":
-        return "-";
+        return s.almacenamiento || "-";
       case "Camara":
-        return "-";
+        return s.camara || "-";
       case "Bateria":
-        return "-";
+        return s.bateria || "-";
       case "Sistema Operativo":
-        return "-";
+        return s.sistema_operativo || "-";
       case "Stock":
-        return p.stock ?? "-";
+        return s.stock ?? p.stock ?? "-";
       default:
         return "-";
     }
@@ -67,7 +68,7 @@ export default function Comparar() {
               onClick={() => toggleSelect(p.id)}
             >
               <p className="text-xs text-gray-500 mb-1">{p.nombre}</p>
-              <p className="font-semibold text-blue-600">${p.precio}</p>
+              <p className="font-semibold text-blue-600">S/ {p.precio}</p>
             </div>
           ))}
         </div>

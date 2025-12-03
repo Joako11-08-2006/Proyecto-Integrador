@@ -35,13 +35,51 @@ export default function Perfil() {
         nombre: "",
         telefono: "",
         direccion: "",
-        ciudad: "",
-        estado: "",
+        Ciudad: "",
+        Estado: "",
         pais: "",
         zipCode: "",
         principal: false,
     });
     const [prefs, setPrefs] = useState({ promociones: true, emailAlerts: true, orderUpdates: true });
+
+    const openReceiptWindow = (data) => {
+        if (!data) return;
+        const itemsRows = (data.items || [])
+            .map(
+                (it) =>
+                    `<tr><td style="padding:4px 8px;">${it.productName}</td><td style="padding:4px 8px;">${it.quantity}</td><td style="padding:4px 8px;">S/ ${it.unitPrice}</td><td style="padding:4px 8px;">S/ ${it.lineTotal}</td></tr>`
+            )
+            .join("");
+        const html = `
+            <html>
+                <head><title>Comprobante #${data.orderId}</title></head>
+                <body style="font-family: Arial, sans-serif; padding:16px;">
+                    <h2>Comprobante de pago</h2>
+                    <p><strong>Orden:</strong> #${data.orderId}</p>
+                    <p><strong>Cliente:</strong> ${data.customerName || ""} (${data.customerEmail || ""})</p>
+                    <p><strong>Método:</strong> ${data.paymentMethod || ""}</p>
+                    <p><strong>Estado pago:</strong> ${data.paymentStatus || ""}</p>
+                    <p><strong>Código operación:</strong> ${data.operationCode || "N/A"}</p>
+                    <p><strong>Dirección:</strong> ${data.shippingAddress || ""}</p>
+                    <p><strong>Fecha:</strong> ${data.createdAt || ""}</p>
+                    <table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse; margin-top:12px; min-width:400px;">
+                        <thead><tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Total</th></tr></thead>
+                        <tbody>${itemsRows}</tbody>
+                    </table>
+                    <h3>Total: S/ ${data.total || 0}</h3>
+                    ${
+                        data.voucherUrl
+                            ? `<p><a href="${data.voucherUrl}" target="_blank" rel="noreferrer">Ver voucher</a></p>`
+                            : ""
+                    }
+                </body>
+            </html>
+        `;
+        const popup = window.open("", "_blank");
+        popup.document.write(html);
+        popup.document.close();
+    };
 
     useEffect(() => {
         refreshProfile()
@@ -127,8 +165,8 @@ export default function Perfil() {
                 nombre: "",
                 telefono: "",
                 direccion: "",
-                ciudad: "",
-                estado: "",
+                Ciudad: "",
+                Estado: "",
                 pais: "",
                 zipCode: "",
                 principal: false,
@@ -268,8 +306,8 @@ export default function Perfil() {
                                 nombre: "",
                                 telefono: "",
                                 direccion: "",
-                                ciudad: "",
-                                estado: "",
+                                Ciudad: "",
+                                Estado: "",
                                 pais: "",
                                 zipCode: "",
                                 principal: false,
@@ -297,8 +335,8 @@ export default function Perfil() {
                         <input className="border rounded px-3 py-2 text-sm" placeholder="Nombre" value={addrForm.nombre || ""} onChange={(e) => setAddrForm({ ...addrForm, nombre: e.target.value })} />
                         <input className="border rounded px-3 py-2 text-sm" placeholder="Teléfono" value={addrForm.telefono || ""} onChange={(e) => setAddrForm({ ...addrForm, telefono: e.target.value })} />
                         <input className="border rounded px-3 py-2 text-sm" placeholder="Dirección" value={addrForm.direccion || ""} onChange={(e) => setAddrForm({ ...addrForm, direccion: e.target.value })} />
-                        <input className="border rounded px-3 py-2 text-sm" placeholder="Ciudad" value={addrForm.ciudad || ""} onChange={(e) => setAddrForm({ ...addrForm, ciudad: e.target.value })} />
-                        <input className="border rounded px-3 py-2 text-sm" placeholder="Estado" value={addrForm.estado || ""} onChange={(e) => setAddrForm({ ...addrForm, estado: e.target.value })} />
+                        <input className="border rounded px-3 py-2 text-sm" placeholder="Ciudad" value={addrForm.Ciudad || ""} onChange={(e) => setAddrForm({ ...addrForm, Ciudad: e.target.value })} />
+                        <input className="border rounded px-3 py-2 text-sm" placeholder="Estado" value={addrForm.Estado || ""} onChange={(e) => setAddrForm({ ...addrForm, Estado: e.target.value })} />
                         <input className="border rounded px-3 py-2 text-sm" placeholder="País" value={addrForm.pais || ""} onChange={(e) => setAddrForm({ ...addrForm, pais: e.target.value })} />
                         <input className="border rounded px-3 py-2 text-sm" placeholder="ZIP" value={addrForm.zipCode || ""} onChange={(e) => setAddrForm({ ...addrForm, zipCode: e.target.value })} />
                         <label className="flex items-center gap-2 text-sm">
@@ -377,6 +415,7 @@ export default function Perfil() {
                                                         try {
                                                             const r = await api.receipt(o.id);
                                                             setReceipt(r);
+                                                            openReceiptWindow(r);
                                                             setMessage("Comprobante cargado.");
                                                         } catch (err) {
                                                             setMessage(err.message || "No se pudo obtener el comprobante");
@@ -397,7 +436,7 @@ export default function Perfil() {
                             <p className="font-semibold">Comprobante de pago</p>
                             <p>Orden: #{receipt.orderId}</p>
                             <p>Método: {receipt.paymentMethod}</p>
-                            <p>Estado: {receipt.paymentStatus}</p>
+                            <p>Estado pago: {receipt.paymentStatus}</p>
                             {receipt.operationCode && <p>Código operación: {receipt.operationCode}</p>}
                             {receipt.voucherUrl && (
                                 <a href={receipt.voucherUrl} target="_blank" rel="noreferrer" className="text-blue-600 underline text-xs">

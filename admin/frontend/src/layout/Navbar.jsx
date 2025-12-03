@@ -33,7 +33,6 @@ function Navbar({ onLogout }) {
   const menuItems = [
     { label: "Dashboard", icon: <DashboardIcon />, path: "dashboard", roles: ["Admin", "SuperAdmin"] },
     { label: "Inventario", icon: <Inventory2Icon />, path: "inventory", roles: ["Admin", "SuperAdmin"] },
-    { label: "Comprobantes", icon: <ReceiptLongIcon />, path: "comprobantes", roles: ["Admin", "SuperAdmin"] },
     { label: "Usuarios", icon: <GroupIcon />, path: "users", roles: ["SuperAdmin"] },
   ];
 
@@ -191,7 +190,7 @@ function Navbar({ onLogout }) {
             sx={{ textTransform: "none", borderRadius: "12px" }}
             onClick={onLogout}
           >
-            Salir
+            Cerrar sesión
           </Button>
         </Box>
 

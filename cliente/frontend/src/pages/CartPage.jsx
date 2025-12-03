@@ -10,9 +10,10 @@ import {
     CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { useShop } from "../context/ShopContext";
+import { api } from "../api";
 
 export default function CartPage() {
-    const {
+const {
         cart,
         products,
         loadCart,
@@ -70,6 +71,13 @@ export default function CartPage() {
                 setMessage("Pedido creado correctamente.");
             }
             setShowPayment(false);
+            // Obtener recibo y mostrar al usuario
+            try {
+                const receipt = await api.receipt(order.id);
+                openReceiptWindow(receipt);
+            } catch (e) {
+                console.error("No se pudo obtener recibo", e);
+            }
             if (checkout.paymentMethod === "paypal") {
                 const amount = total || 0;
                 const returnUrl = encodeURIComponent(window.location.origin + "/carrito");
@@ -227,15 +235,65 @@ function PaymentModal({ onClose, total, items, onConfirm, checkout, setCheckout,
     const [voucherFile, setVoucherFile] = useState(null);
     const [operationCode, setOperationCode] = useState("");
     const [localMessage, setLocalMessage] = useState("");
+    const [payData, setPayData] = useState({
+        cardNumber: "",
+        cardName: "",
+        cardExpiry: "",
+        cardCvv: "",
+        paypalEmail: "",
+        bank: "",
+        account: "",
+    });
 
     useEffect(() => {
-        setCheckout({ ...checkout, paymentMethod: method });
-    }, [method]);
+        setCheckout((prev) => ({ ...prev, paymentMethod: method }));
+    }, [method, setCheckout]);
+
+    const requiredPersonal = [
+        checkout.nombre,
+        checkout.telefono,
+        checkout.email,
+        checkout.direccion,
+        checkout.ciudad,
+        checkout.estado,
+        checkout.pais,
+        checkout.zip,
+    ];
+
+    const validatePayment = () => {
+        if (requiredPersonal.some((v) => !v || !String(v).trim())) {
+            setLocalMessage("Completa todos los datos personales y de envío.");
+            return false;
+        }
+        if (method === "tarjeta") {
+            if (!payData.cardNumber || !payData.cardName || !payData.cardExpiry || !payData.cardCvv) {
+                setLocalMessage("Completa los datos de tu tarjeta.");
+                return false;
+            }
+        }
+        if (method === "paypal") {
+            if (!payData.paypalEmail) {
+                setLocalMessage("Ingresa tu email de PayPal.");
+                return false;
+            }
+        }
+        if (method === "transferencia") {
+            if (!payData.bank || !payData.account) {
+                setLocalMessage("Ingresa banco y número de cuenta.");
+                return false;
+            }
+        }
+        if (method === "yape" && !voucherFile) {
+            setLocalMessage("Sube tu voucher de Yape para continuar.");
+            return false;
+        }
+        setLocalMessage("");
+        return true;
+    };
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
             <div className="bg-white w-full max-w-lg max-h-[90vh] rounded-2xl shadow-xl p-6 overflow-y-auto relative">
-                {/** QR configurable por env o archivo en public/img/yape-qr.png */ }
                 {method === "yape" && (
                     <input type="hidden" value={process.env.REACT_APP_YAPE_QR_URL || "/img/yape-qr.png"} />
                 )}
@@ -274,32 +332,101 @@ function PaymentModal({ onClose, total, items, onConfirm, checkout, setCheckout,
                 <div className="space-y-2 mb-4">
                     <h3 className="text-sm font-semibold text-gray-800">Método de Pago</h3>
 
-                        {[{ id: "tarjeta", label: "Tarjeta de Crédito/Débito" }, { id: "paypal", label: "PayPal" }, { id: "transferencia", label: "Transferencia Bancaria" }, { id: "yape", label: "Yape (QR)" }].map((m) => (
-                            <button
-                                key={m.id}
-                                onClick={() => setMethod(m.id)}
-                                className={`w-full flex items-center justify-between px-3 py-2 border rounded-lg text-sm mb-1 ${
+                    {[
+                        { id: "tarjeta", label: "Tarjeta de Crédito/Débito" },
+                        { id: "paypal", label: "PayPal" },
+                        { id: "transferencia", label: "Transferencia Bancaria" },
+                        { id: "yape", label: "Yape (QR)" },
+                    ].map((m) => (
+                        <button
+                            key={m.id}
+                            onClick={() => setMethod(m.id)}
+                            className={`w-full flex items-center justify-between px-3 py-2 border rounded-lg text-sm mb-1 ${
+                                method === m.id
+                                    ? "border-blue-500 bg-blue-50"
+                                    : "border-gray-200 hover:bg-gray-50"
+                            }`}
+                        >
+                            <span>{m.label}</span>
+                            <span
+                                className={`w-3 h-3 rounded-full border ${
                                     method === m.id
-                                        ? "border-blue-500 bg-blue-50"
-                                        : "border-gray-200 hover:bg-gray-50"
+                                        ? "bg-blue-500 border-blue-500"
+                                        : "border-gray-300"
                                 }`}
-                            >
-                                <span>{m.label}</span>
-                                <span
-                                    className={`w-3 h-3 rounded-full border ${
-                                        method === m.id
-                                            ? "bg-blue-500 border-blue-500"
-                                            : "border-gray-300"
-                                    }`}
-                                />
-                            </button>
-                        ))}
+                            />
+                        </button>
+                    ))}
                 </div>
+
+                {method === "tarjeta" && (
+                    <div className="bg-gray-50 rounded-xl p-3 text-sm mb-4 border border-gray-200">
+                        <p className="font-semibold mb-2">Tarjeta de Crédito/Débito</p>
+                        <input
+                            type="text"
+                            className="w-full border rounded px-3 py-2 text-sm mb-2"
+                            placeholder="Número de tarjeta"
+                            value={payData.cardNumber}
+                            onChange={(e) => setPayData({ ...payData, cardNumber: e.target.value })}
+                        />
+                        <input
+                            type="text"
+                            className="w-full border rounded px-3 py-2 text-sm mb-2"
+                            placeholder="Nombre en la tarjeta"
+                            value={payData.cardName}
+                            onChange={(e) => setPayData({ ...payData, cardName: e.target.value })}
+                        />
+                        <div className="grid grid-cols-2 gap-2">
+                            <input
+                                type="text"
+                                className="w-full border rounded px-3 py-2 text-sm"
+                                placeholder="MM/AA"
+                                value={payData.cardExpiry}
+                                onChange={(e) => setPayData({ ...payData, cardExpiry: e.target.value })}
+                            />
+                            <input
+                                type="text"
+                                className="w-full border rounded px-3 py-2 text-sm"
+                                placeholder="CVV"
+                                value={payData.cardCvv}
+                                onChange={(e) => setPayData({ ...payData, cardCvv: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {method === "paypal" && (
                     <div className="bg-blue-50 rounded-xl p-3 text-sm mb-4 border border-blue-200">
                         <p className="font-semibold">PayPal</p>
-                        <p className="text-xs text-gray-600">Serás redirigido a PayPal para completar el pago.</p>
+                        <p className="text-xs text-gray-600 mb-2">Serás redirigido a PayPal para completar el pago.</p>
+                        <input
+                            type="email"
+                            className="w-full border rounded px-3 py-2 text-sm"
+                            placeholder="Email de PayPal"
+                            value={payData.paypalEmail}
+                            onChange={(e) => setPayData({ ...payData, paypalEmail: e.target.value })}
+                        />
+                    </div>
+                )}
+
+                {method === "transferencia" && (
+                    <div className="bg-blue-50 rounded-xl p-3 text-sm mb-4 border border-blue-200">
+                        <p className="font-semibold">Transferencia Bancaria</p>
+                        <p className="text-xs text-gray-600 mb-2">Recibirás un correo con los datos para transferir.</p>
+                        <input
+                            type="text"
+                            className="w-full border rounded px-3 py-2 text-sm mb-2"
+                            placeholder="Banco"
+                            value={payData.bank}
+                            onChange={(e) => setPayData({ ...payData, bank: e.target.value })}
+                        />
+                        <input
+                            type="text"
+                            className="w-full border rounded px-3 py-2 text-sm"
+                            placeholder="Número de cuenta"
+                            value={payData.account}
+                            onChange={(e) => setPayData({ ...payData, account: e.target.value })}
+                        />
                     </div>
                 )}
 
@@ -337,11 +464,7 @@ function PaymentModal({ onClose, total, items, onConfirm, checkout, setCheckout,
 
                 <button
                     onClick={async () => {
-                        if (method === "yape" && !voucherFile) {
-                            setLocalMessage("Sube tu voucher para continuar.");
-                            return;
-                        }
-                        setLocalMessage("");
+                        if (!validatePayment()) return;
                         await onConfirm({
                             file: voucherFile,
                             operationCode,
@@ -380,4 +503,46 @@ function renderPrecio(products, item) {
             )}
         </div>
     );
+}
+
+// Helper: abrir recibo en nueva ventana
+function openReceiptWindow(receipt) {
+    if (!receipt) return;
+    const itemsHtml = (receipt.items || [])
+        .map(
+            (it) =>
+                `<tr><td>${it.productName}</td><td>${it.quantity}</td><td>S/ ${Number(it.unitPrice || 0).toFixed(2)}</td><td>S/ ${Number(it.lineTotal || 0).toFixed(2)}</td></tr>`
+        )
+        .join("");
+    const html = `
+    <html>
+    <head><title>Recibo ${receipt.orderId || ""}</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 24px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      th, td { border: 1px solid #ddd; padding: 8px; }
+      th { background: #f3f4f6; text-align: left; }
+    </style>
+    </head>
+    <body>
+      <h2>Recibo de Compra ${receipt.orderId || ""}</h2>
+      <p><strong>Cliente:</strong> ${receipt.customerName || ""}</p>
+      <p><strong>Email:</strong> ${receipt.customerEmail || ""}</p>
+      <p><strong>Método de Pago:</strong> ${receipt.paymentMethod || ""}</p>
+      <p><strong>Estado de Pago:</strong> ${receipt.paymentStatus || ""}</p>
+      <p><strong>Dirección de envío:</strong> ${receipt.shippingAddress || ""}</p>
+      <p><strong>Fecha:</strong> ${receipt.createdAt || ""}</p>
+      <table>
+        <thead><tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Total</th></tr></thead>
+        <tbody>${itemsHtml}</tbody>
+      </table>
+      <h3>Total: S/ ${Number(receipt.total || 0).toFixed(2)}</h3>
+    </body>
+    </html>`;
+    const win = window.open("", "_blank");
+    if (win) {
+        win.document.write(html);
+        win.document.close();
+        win.focus();
+    }
 }

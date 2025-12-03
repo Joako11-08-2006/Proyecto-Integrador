@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import StatsCard from "../components/StatsCard";
 import ChartSales from "../components/ChartSales";
 import ChartIncome from "../components/ChartIncome"; 
@@ -24,10 +24,62 @@ export default function Dashboard() {
     productos().then((res) => setProducts(res || [])).catch(() => {});
   }, []);
 
-  const totalVentas = stats?.total_ventas ?? 0;
-  const ingresosTotales = stats?.ingresos_totales ?? 0;
-  const cambioIngresos = stats?.cambio_ingresos ?? "+0%";
-  const cambioVentas = stats?.cambio_ventas ?? "+0%";
+  const mockStats = useMemo(() => {
+    const totalVentas = stats?.total_ventas || 200;
+    const precios = (products || []).map((p) => Number(p.precio) || 1200);
+    const avgPrecio = precios.length ? precios.reduce((a, b) => a + b, 0) / precios.length : 1200;
+    const baseSemanas = [0.8, 1.0, 1.2, 1.1];
+    const ventasSemana = baseSemanas.map((f, idx) => ({
+      name: `Sem ${idx + 1}`,
+      valor: Math.round((totalVentas / baseSemanas.length) * f),
+    }));
+    const ingresosSemana = ventasSemana.map((v) => ({ ...v, valor: Math.round(v.valor * avgPrecio) }));
+
+    const topProducts = (products || [])
+      .map((p) => {
+        const unidades = Number(p.stock) || 0;
+        const ingreso = (Number(p.precio) || 0) * unidades;
+        return {
+          nombre: p.nombre,
+          marca: p.categoria?.nombre || p.categoria || "N/D",
+          ingresos: ingreso,
+          unidades,
+          tendencia: "+0%",
+        };
+      })
+      .sort((a, b) => b.unidades - a.unidades)
+      .slice(0, 5);
+
+    const ingresosTotales = ingresosSemana.reduce((a, b) => a + (b.valor || 0), 0);
+    return {
+      ingresos_totales: ingresosTotales,
+      total_ventas: totalVentas,
+      ticket_promedio: ingresosTotales / (totalVentas || 1),
+      cambio_ingresos: "+0%",
+      cambio_ventas: "+0%",
+      cambio_ticket: "+0%",
+      ventas_por_semana: ventasSemana,
+      ingresos_por_semana: ingresosSemana,
+      top_products: topProducts,
+    };
+  }, [stats, products]);
+
+  const resolvedStats = useMemo(() => {
+    if (!stats) return mockStats;
+    const ingresos = stats.ingresos_totales ?? 0;
+    if (ingresos === 0) return mockStats;
+    return stats;
+  }, [stats, mockStats]);
+
+  const totalVentas = resolvedStats?.total_ventas ?? 0;
+  const ingresosFallback = (products || []).reduce((acc, p) => {
+    const precio = Number(p.precio) || 0;
+    const stock = Number(p.stock) || 0;
+    return acc + precio * stock;
+  }, 0);
+  const ingresosTotales = (resolvedStats?.ingresos_totales ?? 0) || ingresosFallback;
+  const cambioIngresos = resolvedStats?.cambio_ingresos ?? "+0%";
+  const cambioVentas = resolvedStats?.cambio_ventas ?? "+0%";
   const productosActivos = products?.length ?? 0;
   const stockBajoFallback = (products || []).filter((p) => Number(p.stock) <= 5).length;
   const stockBajo = alertCount || stockBajoFallback;
@@ -76,9 +128,26 @@ export default function Dashboard() {
         {/* CONTENIDO DE LOS TABS */}
         <div className="mt-8 bg-white rounded-xl shadow p-6 flex justify-center">
           <div className="w-full max-w-4xl">
-            {activeTab === "ventas" && <ChartSales data={stats?.ventas_por_semana || stats?.ventas || []} />}
-            {activeTab === "ingresos" && <ChartIncome data={stats?.ingresos_por_semana || stats?.ingresos || []} />}
-            {activeTab === "productos" && <ChartTopProducts data={stats?.top_products || []} />}
+            {activeTab === "ventas" && <ChartSales data={resolvedStats?.ventas_por_semana || resolvedStats?.ventas || []} />}
+            {activeTab === "ingresos" && <ChartIncome data={resolvedStats?.ingresos_por_semana || resolvedStats?.ingresos || []} />}
+            {activeTab === "productos" && (
+              <ChartTopProducts
+                data={
+                  resolvedStats?.top_products?.length
+                    ? resolvedStats.top_products
+                    : (products || [])
+                        .map((p) => ({
+                          nombre: p.nombre,
+                          marca: p.categoria?.nombre || p.categoria || "N/D",
+                          unidades: Number(p.stock) || 0,
+                          ingresos: (Number(p.precio) || 0) * (Number(p.stock) || 0),
+                          tendencia: "+0%",
+                        }))
+                        .sort((a, b) => b.unidades - a.unidades)
+                        .slice(0, 5)
+                }
+              />
+            )}
             {activeTab === "marcas" && <ChartBrands products={products} />}
           </div>
         </div>

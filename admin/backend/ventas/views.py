@@ -1,7 +1,8 @@
 from datetime import timedelta
 from django.utils import timezone
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, F, Value, DecimalField
+from django.db.models.functions import Coalesce
 from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
 from django.http import HttpResponse
 
@@ -26,10 +27,13 @@ class VentaStatsAPIView(APIView):
     def get(self, request):
         hoy = timezone.now()
         desde = hoy - timedelta(days=60)  # 2 meses
-        ventas = Venta.objects.filter(fecha__gte=desde)
+        ventas = Venta.objects.filter(fecha__gte=desde).select_related("producto")
 
-        ingresos_totales = ventas.aggregate(total=Sum("total")).get("total") or 0
-        ingresos_totales = float(ingresos_totales)
+        agg = ventas.aggregate(
+            total=Coalesce(Sum("total"), Value(0, output_field=DecimalField())),
+            alt=Coalesce(Sum(F("cantidad") * F("producto__precio")), Value(0, output_field=DecimalField())),
+        )
+        ingresos_totales = float(agg.get("total") or 0) or float(agg.get("alt") or 0)
         total_ventas = ventas.aggregate(cnt=Count("id")).get("cnt") or 0
         ticket_promedio = ingresos_totales / total_ventas if total_ventas else 0
 
@@ -37,7 +41,11 @@ class VentaStatsAPIView(APIView):
             data = (
                 qs.annotate(period=trunc_fn("fecha"))
                 .values("period")
-                .annotate(total=Sum("total"), cantidad=Sum("cantidad"))
+                .annotate(
+                    total=Coalesce(Sum("total"), Value(0, output_field=DecimalField())),
+                    total_alt=Coalesce(Sum(F("cantidad") * F("producto__precio")), Value(0, output_field=DecimalField())),
+                    cantidad=Coalesce(Sum("cantidad"), Value(0)),
+                )
                 .order_by("period")
             )
             ventas_s = []
@@ -46,7 +54,12 @@ class VentaStatsAPIView(APIView):
                 period = d["period"]
                 label = period.strftime(label_fmt) if period else ""
                 ventas_s.append({"name": label, "valor": int(d["cantidad"] or 0)})
-                ingresos_s.append({"name": label, "valor": float(d["total"] or 0)})
+                ingresos_s.append(
+                    {
+                        "name": label,
+                        "valor": float(d["total"] or 0) or float(d["total_alt"] or 0),
+                    }
+                )
             return ventas_s, ingresos_s
 
         ventas_por_dia, ingresos_por_dia = build_series(ventas, TruncDay, "%Y-%m-%d")
@@ -55,14 +68,18 @@ class VentaStatsAPIView(APIView):
 
         top_products = (
             ventas.values("producto__nombre", "producto__categoria__nombre")
-            .annotate(ingresos=Sum("total"), unidades=Sum("cantidad"))
+            .annotate(
+                ingresos=Coalesce(Sum("total"), Value(0, output_field=DecimalField())),
+                ingresos_alt=Coalesce(Sum(F("cantidad") * F("producto__precio")), Value(0, output_field=DecimalField())),
+                unidades=Coalesce(Sum("cantidad"), Value(0)),
+            )
             .order_by("-unidades")[:5]
         )
         top_products = [
             {
                 "nombre": tp["producto__nombre"],
                 "marca": tp["producto__categoria__nombre"],
-                "ingresos": float(tp["ingresos"] or 0),
+                "ingresos": float(tp["ingresos"] or tp["ingresos_alt"] or 0),
                 "unidades": int(tp["unidades"] or 0),
             }
             for tp in top_products

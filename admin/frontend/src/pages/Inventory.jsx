@@ -103,11 +103,11 @@ export default function Inventory() {
                         <span className="text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full w-fit">
                           -{p.descuento}%
                         </span>
-                        <span className="line-through text-xs text-gray-400">${p.precio}</span>
-                        <span>${p.precio_con_descuento || p.precio}</span>
+                        <span className="line-through text-xs text-gray-400">S/ {p.precio}</span>
+                        <span>S/ {p.precio_con_descuento || p.precio}</span>
                       </div>
                     ) : (
-                      <>${p.precio}</>
+                      <>S/ {p.precio}</>
                     )}
                   </td>
 

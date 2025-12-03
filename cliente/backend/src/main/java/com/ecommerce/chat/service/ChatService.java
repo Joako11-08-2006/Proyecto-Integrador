@@ -13,28 +13,36 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.time.Duration;
 
 @Service
 public class ChatService {
 
-    private final WebClient webClient;
+    private final WebClient geminiClient;
+    private final com.ecommerce.chat.config.GeminiProperties gemini;
     private final ProductRepository productRepository;
     private final ChatKnowledgeService knowledgeService;
     private final NotificationService notificationService;
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
 
-    @Value("${OPENAI_API_KEY:}")
-    private String openAiKey;
+    
 
     public ChatService(
             ProductRepository productRepository,
             ChatKnowledgeService knowledgeService,
-            NotificationService notificationService
+            NotificationService notificationService,
+            com.ecommerce.chat.config.GeminiProperties gemini
     ) {
         this.productRepository = productRepository;
         this.knowledgeService = knowledgeService;
         this.notificationService = notificationService;
-        this.webClient = WebClient.builder()
-                .baseUrl("https://api.openai.com/v1/chat/completions")
+        this.gemini = gemini;
+        this.geminiClient = WebClient.builder()
+                .baseUrl("https://generativelanguage.googleapis.com/v1beta/models")
                 .build();
     }
 
@@ -69,7 +77,13 @@ public class ChatService {
             maybeNotify(username, "Seguimiento de pedido", "Revisa tus pedidos en Perfil > Mis pedidos.", "BOT");
             return resp;
         }
-        return llm(message, username);
+        if (lower.contains("hola") || lower.contains("buenas") || lower.contains("ayuda")) {
+            return ChatResponse.builder()
+                    .text("Hola, ¿en qué te ayudo?")
+                    .suggestions(List.of("Ver promociones", "Comparar celulares", "Métodos de pago", "Estado de pedido"))
+                    .build();
+        }
+        return gemini(message, username);
     }
 
     private ChatResponse promos() {
@@ -102,56 +116,7 @@ public class ChatService {
         return p.getPrecio().multiply(factor).toPlainString();
     }
 
-    private ChatResponse llm(String msg, String username) {
-        if (openAiKey == null || openAiKey.isBlank()) {
-            return ChatResponse.builder()
-                    .text("Activa la IA con la variable OPENAI_API_KEY.")
-                    .build();
-        }
-        String knowledge = Optional.ofNullable(knowledgeService.latest())
-                .map(k -> "\nContexto adicional:\n" + k.getContent())
-                .orElse("");
-        String prompt = ("Eres el asistente virtual de TecnoMarket. Responde en español, breve, usando soles (S/). " +
-                "Métodos de pago: Tarjeta, PayPal, Yape (QR). Envío: rápido y con seguimiento en Perfil." + knowledge);
-        String body = """
-        {
-          "model": "gpt-3.5-turbo",
-          "messages": [
-            {"role":"system","content":"%s"},
-            {"role":"user","content":"%s"}
-          ],
-          "max_tokens": 200
-        }
-        """.formatted(prompt, msg);
-
-        try {
-            String text = webClient.post()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + openAiKey)
-                    .bodyValue(body)
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .map(this::extractContent)
-                    .onErrorResume(e -> Mono.just("No pude consultar IA ahora."))
-                    .block();
-            ChatResponse resp = ChatResponse.builder().text(text).build();
-            maybeNotify(username, "Respuesta del bot", text, "BOT");
-            return resp;
-        } catch (Exception e) {
-            return ChatResponse.builder().text("No pude consultar IA ahora.").build();
-        }
-    }
-
-    private String extractContent(String json) {
-        // Extracción simple; para producción usar un parser JSON
-        int idx = json.indexOf("\"content\"");
-        if (idx == -1) return "Aquí estoy para ayudarte.";
-        int start = json.indexOf(":", idx);
-        int firstQuote = json.indexOf("\"", start);
-        int endQuote = json.indexOf("\"", firstQuote + 1);
-        if (firstQuote == -1 || endQuote == -1) return "Aquí estoy para ayudarte.";
-        return json.substring(firstQuote + 1, endQuote).replace("\\n", "\n");
-    }
+    
 
     private void maybeNotify(String username, String title, String message, String type) {
         if (username == null || username.isBlank()) return;
@@ -159,6 +124,124 @@ public class ChatService {
             notificationService.createForUsername(username, title, message, type);
         } catch (Exception ignored) {
             // No interrumpir la respuesta del bot
+        }
+    }
+
+    private ChatResponse gemini(String msg, String username) {
+        String key = gemini.getApiKey();
+        if (key == null || key.isBlank()) {
+            return ChatResponse.builder()
+                    .text("Activa la IA con la variable GEMINI_API_KEY.")
+                    .build();
+        }
+        String knowledge = Optional.ofNullable(knowledgeService.latest())
+                .map(k -> "\nContexto adicional:\n" + k.getContent())
+                .orElse("");
+        String prompt = ("Eres el asistente virtual de TecnoMarket. Responde en español, breve, usando soles (S/). " +
+                "Métodos de pago: Tarjeta, PayPal, Yape (QR). Envío: rápido y con seguimiento en Perfil." + knowledge);
+        String body;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            com.fasterxml.jackson.databind.node.ObjectNode root = mapper.createObjectNode();
+            com.fasterxml.jackson.databind.node.ArrayNode contents = mapper.createArrayNode();
+            com.fasterxml.jackson.databind.node.ObjectNode content = mapper.createObjectNode();
+            com.fasterxml.jackson.databind.node.ArrayNode parts = mapper.createArrayNode();
+            com.fasterxml.jackson.databind.node.ObjectNode text = mapper.createObjectNode();
+            text.put("text", prompt + "\n\nPregunta: " + msg);
+            parts.add(text);
+            content.set("parts", parts);
+            contents.add(content);
+            root.set("contents", contents);
+            body = mapper.writeValueAsString(root);
+        } catch (Exception e) {
+            body = "{\"contents\":[{\"parts\":[{\"text\":\"" + prompt.replace("\"","'") + "\\n\\nPregunta: " + msg.replace("\"","'") + "\"}]}]}";
+        }
+
+        try {
+            String json = geminiClient.post()
+                    .uri("/" + gemini.getModel() + ":generateContent?key=" + key)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .timeout(Duration.ofSeconds(10))
+                    .onErrorResume(e -> {
+                        log.warn("Gemini error", e);
+                        String msgErr = e.getMessage() == null ? "error" : e.getMessage().replace("\"","'");
+                        return Mono.just("{\"error\":\"" + msgErr + "\"}");
+                    })
+                    .block();
+            String textResp = extractGeminiContent(json);
+            if (textResp.equals("Aquí estoy para ayudarte.") && json != null && json.contains("error")) {
+                textResp = "No pude consultar IA ahora.";
+            }
+            ChatResponse resp = ChatResponse.builder().text(textResp).build();
+            maybeNotify(username, "Respuesta del bot", textResp, "BOT");
+            return resp;
+        } catch (Exception e) {
+            log.warn("Gemini call failed", e);
+            return ChatResponse.builder().text("No pude consultar IA ahora.").build();
+        }
+    }
+
+    private String extractGeminiContent(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(json);
+            JsonNode candidates = root.path("candidates");
+            if (candidates.isArray() && candidates.size() > 0) {
+                JsonNode parts = candidates.get(0).path("content").path("parts");
+                if (parts.isArray() && parts.size() > 0) {
+                    JsonNode text = parts.get(0).path("text");
+                    if (!text.isMissingNode() && !text.isNull()) {
+                        return text.asText();
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return "Aquí estoy para ayudarte.";
+    }
+
+    public com.ecommerce.chat.dto.ChatStatusResponse status() {
+        boolean enabled = gemini.getApiKey() != null && !gemini.getApiKey().isBlank();
+        return com.ecommerce.chat.dto.ChatStatusResponse.builder()
+                .enabled(enabled)
+                .model(gemini.getModel())
+                .build();
+    }
+
+    public com.ecommerce.chat.dto.ChatHealthResponse health() {
+        String key = gemini.getApiKey();
+        String model = gemini.getModel();
+        if (key == null || key.isBlank()) {
+            return com.ecommerce.chat.dto.ChatHealthResponse.builder()
+                    .ok(false).provider("GEMINI").model(model)
+                    .error("Missing GEMINI_API_KEY")
+                    .build();
+        }
+        String body = "{\"contents\":[{\"parts\":[{\"text\":\"Di ok\"}]}]}";
+        try {
+            String json = geminiClient.post()
+                    .uri("/" + model + ":generateContent?key=" + key)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .timeout(Duration.ofSeconds(6))
+                    .onErrorResume(e -> Mono.just("{\"error\":\"" + (e.getMessage()==null?"error":e.getMessage()) + "\"}"))
+                    .block();
+            String text = extractGeminiContent(json);
+            boolean ok = "ok".equalsIgnoreCase(text.trim());
+            return com.ecommerce.chat.dto.ChatHealthResponse.builder()
+                    .ok(ok).provider("GEMINI").model(model)
+                    .message(text)
+                    .error(json != null && json.contains("error") ? json : null)
+                    .build();
+        } catch (Exception e) {
+            return com.ecommerce.chat.dto.ChatHealthResponse.builder()
+                    .ok(false).provider("GEMINI").model(model)
+                    .error(e.getMessage())
+                    .build();
         }
     }
 }
