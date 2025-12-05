@@ -1,0 +1,287 @@
+<svg viewBox="0 0 1600 1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .entity { fill: #e3f2fd; stroke: #1976d2; stroke-width: 2; }
+      .entity-title { font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; text-anchor: middle; fill: #1976d2; }
+      .entity-field { font-family: Arial, sans-serif; font-size: 8px; fill: #333; }
+      .relation-line { stroke: #333; stroke-width: 1.5; fill: none; }
+      .relation-label { font-family: Arial, sans-serif; font-size: 9px; fill: #666; }
+      .pk { font-weight: bold; color: #d32f2f; }
+      .fk { color: #1976d2; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#333" />
+    </marker>
+  </defs>
+  
+  <!-- Fondo blanco -->
+  <rect x="0" y="0" width="1600" height="1200" fill="#ffffff"/>
+  
+  <!-- Título -->
+  <text x="800" y="30" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">Modelo Entidad-Relación (MER)</text>
+  
+  <!-- Sección: Usuarios y Clientes (Izquierda) -->
+  <text x="100" y="70" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1976d2">Usuarios y Clientes</text>
+  
+  <!-- User (auth_user) -->
+  <rect x="50" y="90" width="180" height="120" class="entity" rx="5"/>
+  <text x="140" y="110" class="entity-title">User (auth_user)</text>
+  <text x="60" y="130" class="entity-field pk">PK id: int</text>
+  <text x="60" y="145" class="entity-field">username: string (UK)</text>
+  <text x="60" y="160" class="entity-field">password: string</text>
+  <text x="60" y="175" class="entity-field">email: string</text>
+  <text x="60" y="190" class="entity-field">date_joined: datetime</text>
+  
+  <!-- Cliente -->
+  <rect x="260" y="90" width="180" height="160" class="entity" rx="5"/>
+  <text x="350" y="110" class="entity-title">Cliente</text>
+  <text x="270" y="130" class="entity-field pk">PK id: int</text>
+  <text x="270" y="145" class="entity-field fk">FK usuario_id: int</text>
+  <text x="270" y="160" class="entity-field">nombre: string</text>
+  <text x="270" y="175" class="entity-field">email: string (UK)</text>
+  <text x="270" y="190" class="entity-field">telefono: string</text>
+  <text x="270" y="205" class="entity-field">direccion: string</text>
+  <text x="270" y="220" class="entity-field">rol: string</text>
+  <text x="270" y="235" class="entity-field">creado_en: datetime</text>
+  
+  <!-- Relación User-Cliente -->
+  <path d="M 230 150 L 260 180" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="240" y="160" class="relation-label">1:1</text>
+  
+  <!-- Sección: Productos (Centro Superior) -->
+  <text x="600" y="70" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1976d2">Productos</text>
+  
+  <!-- Categoria -->
+  <rect x="500" y="90" width="160" height="70" class="entity" rx="5"/>
+  <text x="580" y="110" class="entity-title">Categoria</text>
+  <text x="510" y="130" class="entity-field pk">PK id: int</text>
+  <text x="510" y="145" class="entity-field">nombre: string</text>
+  
+  <!-- Producto -->
+  <rect x="500" y="180" width="160" height="170" class="entity" rx="5"/>
+  <text x="580" y="200" class="entity-title">Producto</text>
+  <text x="510" y="220" class="entity-field pk">PK id: int</text>
+  <text x="510" y="235" class="entity-field">nombre: string</text>
+  <text x="510" y="250" class="entity-field">descripcion: text</text>
+  <text x="510" y="265" class="entity-field">precio: decimal</text>
+  <text x="510" y="280" class="entity-field">stock: int</text>
+  <text x="510" y="295" class="entity-field fk">FK categoria_id: int</text>
+  <text x="510" y="310" class="entity-field">imagen_url: string</text>
+  <text x="510" y="325" class="entity-field">creado_en: datetime</text>
+  <text x="510" y="340" class="entity-field">actualizado_en: datetime</text>
+  
+  <!-- Relación Categoria-Producto -->
+  <path d="M 580 160 L 580 180" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="600" y="170" class="relation-label">1:N</text>
+  
+  <!-- Promocion -->
+  <rect x="700" y="180" width="160" height="120" class="entity" rx="5"/>
+  <text x="780" y="200" class="entity-title">Promocion</text>
+  <text x="710" y="220" class="entity-field pk">PK id: int</text>
+  <text x="710" y="235" class="entity-field">nombre: string</text>
+  <text x="710" y="250" class="entity-field">descuento: decimal</text>
+  <text x="710" y="265" class="entity-field">activo: boolean</text>
+  <text x="710" y="280" class="entity-field fk">FK producto_id: int</text>
+  <text x="710" y="295" class="entity-field">fecha_inicio: date</text>
+  
+  <!-- Relación Producto-Promocion -->
+  <path d="M 660 270 L 700 270" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="680" y="260" class="relation-label">1:1</text>
+  
+  <!-- Alerta -->
+  <rect x="700" y="320" width="160" height="100" class="entity" rx="5"/>
+  <text x="780" y="340" class="entity-title">Alerta</text>
+  <text x="710" y="360" class="entity-field pk">PK id: int</text>
+  <text x="710" y="375" class="entity-field fk">FK producto_id: int</text>
+  <text x="710" y="390" class="entity-field">mensaje: string</text>
+  <text x="710" y="405" class="entity-field">creado_en: datetime</text>
+  <text x="710" y="420" class="entity-field">visto: boolean</text>
+  
+  <!-- Relación Producto-Alerta -->
+  <path d="M 660 320 L 700 360" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="680" y="340" class="relation-label">1:N</text>
+  
+  <!-- Sección: Ventas y Órdenes (Centro) -->
+  <text x="1000" y="70" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1976d2">Ventas y Órdenes</text>
+  
+  <!-- Venta -->
+  <rect x="950" y="90" width="160" height="100" class="entity" rx="5"/>
+  <text x="1030" y="110" class="entity-title">Venta</text>
+  <text x="960" y="130" class="entity-field pk">PK id: int</text>
+  <text x="960" y="145" class="entity-field fk">FK producto_id: int</text>
+  <text x="960" y="160" class="entity-field">cantidad: int</text>
+  <text x="960" y="175" class="entity-field">fecha: datetime</text>
+  <text x="960" y="190" class="entity-field">total: decimal</text>
+  
+  <!-- Relación Producto-Venta -->
+  <path d="M 660 270 L 1030 145" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="845" y="200" class="relation-label">1:N</text>
+  
+  <!-- Cart -->
+  <rect x="1150" y="90" width="160" height="90" class="entity" rx="5"/>
+  <text x="1230" y="110" class="entity-title">Cart</text>
+  <text x="1160" y="130" class="entity-field pk">PK id: int</text>
+  <text x="1160" y="145" class="entity-field fk">FK user_id: int</text>
+  <text x="1160" y="160" class="entity-field">created_at: datetime</text>
+  <text x="1160" y="175" class="entity-field">updated_at: datetime</text>
+  
+  <!-- Relación User-Cart -->
+  <path d="M 230 150 L 1230 135" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="730" y="140" class="relation-label">1:1</text>
+  
+  <!-- CartItem -->
+  <rect x="1150" y="200" width="160" height="100" class="entity" rx="5"/>
+  <text x="1230" y="220" class="entity-title">CartItem</text>
+  <text x="1160" y="240" class="entity-field pk">PK id: int</text>
+  <text x="1160" y="255" class="entity-field fk">FK cart_id: int</text>
+  <text x="1160" y="270" class="entity-field fk">FK producto_id: int</text>
+  <text x="1160" y="285" class="entity-field">cantidad: int</text>
+  <text x="1160" y="300" class="entity-field">created_at: datetime</text>
+  
+  <!-- Relación Cart-CartItem -->
+  <path d="M 1230 180 L 1230 200" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="1250" y="190" class="relation-label">1:N</text>
+  
+  <!-- Relación Producto-CartItem -->
+  <path d="M 660 320 L 1160 270" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="910" y="295" class="relation-label">1:N</text>
+  
+  <!-- Order -->
+  <rect x="1350" y="90" width="200" height="160" class="entity" rx="5"/>
+  <text x="1450" y="110" class="entity-title">Order</text>
+  <text x="1360" y="130" class="entity-field pk">PK id: int</text>
+  <text x="1360" y="145" class="entity-field fk">FK user_id: int</text>
+  <text x="1360" y="160" class="entity-field">total: decimal</text>
+  <text x="1360" y="175" class="entity-field">status: string</text>
+  <text x="1360" y="190" class="entity-field">created_at: datetime</text>
+  <text x="1360" y="205" class="entity-field">payment_method: string</text>
+  <text x="1360" y="220" class="entity-field">voucher_url: string</text>
+  <text x="1360" y="235" class="entity-field">shipping_address: text</text>
+  
+  <!-- Relación Cliente-Order -->
+  <path d="M 440 180 L 1450 145" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="945" y="160" class="relation-label">1:N</text>
+  
+  <!-- OrderItem -->
+  <rect x="1350" y="270" width="200" height="100" class="entity" rx="5"/>
+  <text x="1450" y="290" class="entity-title">OrderItem</text>
+  <text x="1360" y="310" class="entity-field pk">PK id: int</text>
+  <text x="1360" y="325" class="entity-field fk">FK order_id: int</text>
+  <text x="1360" y="340" class="entity-field fk">FK producto_id: int</text>
+  <text x="1360" y="355" class="entity-field">cantidad: int</text>
+  <text x="1360" y="370" class="entity-field">precio_unitario: decimal</text>
+  
+  <!-- Relación Order-OrderItem -->
+  <path d="M 1450 250 L 1450 270" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="1470" y="260" class="relation-label">1:N</text>
+  
+  <!-- Relación Producto-OrderItem -->
+  <path d="M 660 350 L 1360 340" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="1010" y="345" class="relation-label">1:N</text>
+  
+  <!-- Sección: Comprobantes (Derecha) -->
+  <text x="1000" y="420" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1976d2">Comprobantes</text>
+  
+  <!-- Comprobante -->
+  <rect x="950" y="440" width="180" height="110" class="entity" rx="5"/>
+  <text x="1040" y="460" class="entity-title">Comprobante</text>
+  <text x="960" y="480" class="entity-field pk">PK id: int</text>
+  <text x="960" y="495" class="entity-field">tipo: string</text>
+  <text x="960" y="510" class="entity-field fk">FK cliente_id: int</text>
+  <text x="960" y="525" class="entity-field">fecha: datetime</text>
+  <text x="960" y="540" class="entity-field">total: decimal</text>
+  <text x="960" y="555" class="entity-field">estado: string</text>
+  
+  <!-- Relación Cliente-Comprobante -->
+  <path d="M 440 250 L 1040 510" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="740" y="380" class="relation-label">1:N</text>
+  
+  <!-- ComprobanteItem -->
+  <rect x="1170" y="440" width="200" height="100" class="entity" rx="5"/>
+  <text x="1270" y="460" class="entity-title">ComprobanteItem</text>
+  <text x="1180" y="480" class="entity-field pk">PK id: int</text>
+  <text x="1180" y="495" class="entity-field fk">FK comprobante_id: int</text>
+  <text x="1180" y="510" class="entity-field fk">FK producto_id: int</text>
+  <text x="1180" y="525" class="entity-field">cantidad: int</text>
+  <text x="1180" y="540" class="entity-field">precio_unitario: decimal</text>
+  
+  <!-- Relación Comprobante-ComprobanteItem -->
+  <path d="M 1130 495 L 1170 495" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="1150" y="485" class="relation-label">1:N</text>
+  
+  <!-- Relación Producto-ComprobanteItem -->
+  <path d="M 660 350 L 1270 510" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="965" y="430" class="relation-label">1:N</text>
+  
+  <!-- Sección: Perfil y Notificaciones (Inferior) -->
+  <text x="100" y="600" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1976d2">Perfil y Notificaciones</text>
+  
+  <!-- Address -->
+  <rect x="50" y="620" width="180" height="140" class="entity" rx="5"/>
+  <text x="140" y="640" class="entity-title">Address</text>
+  <text x="60" y="660" class="entity-field pk">PK id: int</text>
+  <text x="60" y="675" class="entity-field fk">FK user_id: int</text>
+  <text x="60" y="690" class="entity-field">etiqueta: string</text>
+  <text x="60" y="705" class="entity-field">nombre: string</text>
+  <text x="60" y="720" class="entity-field">direccion: string</text>
+  <text x="60" y="735" class="entity-field">ciudad: string</text>
+  <text x="60" y="750" class="entity-field">pais: string</text>
+  <text x="60" y="765" class="entity-field">principal: boolean</text>
+  
+  <!-- Relación User-Address -->
+  <path d="M 140 210 L 140 620" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="160" y="415" class="relation-label">1:N</text>
+  
+  <!-- Notification -->
+  <rect x="260" y="620" width="180" height="120" class="entity" rx="5"/>
+  <text x="350" y="640" class="entity-title">Notification</text>
+  <text x="270" y="660" class="entity-field pk">PK id: int</text>
+  <text x="270" y="675" class="entity-field fk">FK user_id: int</text>
+  <text x="270" y="690" class="entity-field">titulo: string</text>
+  <text x="270" y="705" class="entity-field">mensaje: string</text>
+  <text x="270" y="720" class="entity-field">tipo: string</text>
+  <text x="270" y="735" class="entity-field">leida: boolean</text>
+  <text x="270" y="750" class="entity-field">created_at: datetime</text>
+  
+  <!-- Relación User-Notification -->
+  <path d="M 140 210 L 350 675" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="245" y="442" class="relation-label">1:N</text>
+  
+  <!-- NotificationPreference -->
+  <rect x="470" y="620" width="200" height="120" class="entity" rx="5"/>
+  <text x="570" y="640" class="entity-title">NotificationPreference</text>
+  <text x="480" y="660" class="entity-field pk">PK id: int</text>
+  <text x="480" y="675" class="entity-field fk">FK user_id: int</text>
+  <text x="480" y="690" class="entity-field">email_enabled: boolean</text>
+  <text x="480" y="705" class="entity-field">push_enabled: boolean</text>
+  <text x="480" y="720" class="entity-field">sms_enabled: boolean</text>
+  <text x="480" y="735" class="entity-field">created_at: datetime</text>
+  
+  <!-- Relación User-NotificationPreference -->
+  <path d="M 140 210 L 570 675" class="relation-line" marker-end="url(#arrow)"/>
+  <text x="355" y="442" class="relation-label">1:N</text>
+  
+  <!-- ChatKnowledge -->
+  <rect x="700" y="620" width="180" height="100" class="entity" rx="5"/>
+  <text x="790" y="640" class="entity-title">ChatKnowledge</text>
+  <text x="710" y="660" class="entity-field pk">PK id: int</text>
+  <text x="710" y="675" class="entity-field">pregunta: string</text>
+  <text x="710" y="690" class="entity-field">respuesta: text</text>
+  <text x="710" y="705" class="entity-field">relevancia: int</text>
+  <text x="710" y="720" class="entity-field">created_at: datetime</text>
+  
+  <!-- Leyenda -->
+  <rect x="950" y="620" width="600" height="140" fill="#f5f5f5" stroke="#ccc" stroke-width="1" rx="5"/>
+  <text x="1250" y="645" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">Leyenda</text>
+  <text x="970" y="670" class="entity-field pk">PK = Primary Key</text>
+  <text x="970" y="690" class="entity-field fk">FK = Foreign Key</text>
+  <text x="970" y="710" class="entity-field">UK = Unique Key</text>
+  <text x="970" y="730" class="entity-field">1:1 = Uno a Uno</text>
+  <text x="970" y="750" class="entity-field">1:N = Uno a Muchos</text>
+  
+  <text x="1200" y="670" class="entity-field">N:M = Muchos a Muchos</text>
+  <text x="1200" y="690" class="entity-field">(si aplica)</text>
+  
+  <!-- Nota final -->
+  <text x="800" y="800" font-family="Arial, sans-serif" font-size="10" fill="#666" font-style="italic" text-anchor="middle">Nota: Este diagrama muestra las principales entidades y relaciones del sistema. Algunas relaciones pueden tener cardinalidades adicionales según la implementación.</text>
+</svg>
